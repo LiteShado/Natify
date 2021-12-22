@@ -1,4 +1,6 @@
-import { StyleSheet } from 'react-native';
+import * as React from 'react';
+
+import { StyleSheet, Flatlist, View } from 'react-native';
 
 import EditScreenInfo from '../components/EditScreenInfo';
 import { Text, View } from '../components/Themed';
@@ -10,12 +12,19 @@ const album = {
   id: '1'
 }
 
-export default function HomeScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
+export default function HomeScreen() {
   return (
     <View style={styles.container}>
-      <Text
-      style={{color: 'black'}}> Hello from Home </Text>
-      <Album album={ album } />
+    <Flatlist
+      data={categories}
+      renderItems={({ item }) => (
+        <AlbumCategory
+          title={item.title}
+          albums={item.albums.items}
+        />
+      )}
+        keyExtractor={(item) => item.id}
+        />
     </View>
   );
 }
