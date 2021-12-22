@@ -1,29 +1,35 @@
 import React from 'react';
-import { View, Image, Text} from 'react-native';
-import styles from './styles.ts';
+import {
+  View,
+  Image,
+  Text,
+  TouchableWithoutFeedback,
+} from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import styles from './styles';
+import { Album } from '../../types';
 
 export type AlbumProps = {
-    album: {
-        id: string;
-        imageUri: string;
-        artistHeadline: string;
-    }
+  album: Album,
 }
 
-const Album = (props: AlbumProps) => {
+const AlbumComponent = (props: AlbumProps) => {
 
-    <View styles={styles.container}>
-        <Image source={{ uri: props.album.imageUri }}
-        style = {styles.image}/>
-        <Text source={ props.album.artistHeadline } style = {styles.text} />
-    </View>
+  const navigation = useNavigation();
 
-    return (
-        <View>
-            <Text> High from Album </Text>
-        </View>
-    )
+  const onPress = () => {
+    navigation.navigate('AlbumScreen', { id: props.album.id })
+  }
+
+  return (
+    <TouchableWithoutFeedback onPress={onPress}>
+      <View style={styles.container}>
+          <Image source={{uri: props.album.imageUri}} style={styles.image}/>
+          <Text style={styles.text}>{props.album.artistsHeadline}</Text>
+      </View>
+    </TouchableWithoutFeedback>
+
+  )
 }
 
-
-export default Album;
+export default AlbumComponent;
