@@ -2,30 +2,30 @@
 type AlbumCategory @model {
   id: ID!
   title: String!
-  albums: [Album] @connection(keyname: "byAlbumCategory", fields: ["id"])
+  albums: [Album] @hasMany(indexName: "byAlbumCategory", fields: ["id"])
 }
 
-type Album @model @key(name: "byAlbumCategory", fields: ["albumCategoryId"]) {
-  id: ID!
+type Album @model {
+  id: ID! @index(name: "byAlbumCategory", sortKeyFields: ["albumCategoryId"])
   name: String!
   by: String!
   numberOfLikes: Int!
   imageUri: String!
   artistsHeadline: String!
 
-  songs: [Song] @connection(keyName: "byAlbum", fields: ["id"])
+  songs: [Song] @hasMany(indexName: "byAlbum", fields: ["id"])
 
   albumCategoryId: ID!
-  albumCategory: AlbumCategory @connection(fields: ["albumCategoryId"])
+  albumCategory: AlbumCategory @belongsTo(fields: ["albumCategoryId"])
 }
 
-type Song @model @key(name: "byAlbum", fields: ["albumId"]) {
-  id: ID!
+type Song @model {
+  id: ID! @index(name: "byAlbum", sortKeyFields: ["albumId"])
   imageUri: String!
   uri: String!
   title: String!
   artist: String!
 
   albumId: ID!
-  album: Album @connection(fields: ["albumId"])
+  album: Album @belongsTo(fields: ["albumId"])
 }
