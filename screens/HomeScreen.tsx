@@ -1,18 +1,31 @@
 import * as React from 'react';
+import { StyleSheet, FlatList, View  } from 'react-native';
 
-import { StyleSheet, Flatlist, View } from 'react-native';
+import { API, graphqlOperation } from 'aws-amplify';
 
-import EditScreenInfo from '../components/EditScreenInfo';
-import { Text, View } from '../components/Themed';
-import { RootTabScreenProps } from '../types';
+import AlbumCategory from '../components/AlbumCategory';
+import albumCategories from '../data/albumCategories';
+import { listAlbumCategorys } from '../src/graphql/queries';
+import {useEffect, useState} from "react";
 
-import Album from '../components/Album';
-
-const album = {
-  id: '1'
-}
 
 export default function HomeScreen() {
+
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const fetchAlbumCategories = async () => {
+      try {
+        const data = await API.graphql(graphqlOperation(listAlbumCategorys));
+        setCategories(data.data.listAlbumCategorys.items);
+      } catch (e) {
+        console.log(e);
+      }
+    }
+
+    fetchAlbumCategories();
+  }, []);
+
   return (
     <View style={styles.container}>
     <Flatlist
