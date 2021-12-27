@@ -1,21 +1,20 @@
 type AlbumCategory @model @auth(rules: [{ allow: public }]) {
   id: ID!
   title: String!
-  albums: [Album] @belongsTo(indexName: "byAlbumCategory", fields: ["id"])
+  albums: [Album] @hasOne(fields: ["id"])
 }
 
 type Album @model @auth(rules: [{ allow: public }]) {
-  id: ID! @primaryKey
+  id: ID!
   name: String!
   by: String!
   numberOfLikes: Int!
   imageUri: String!
   artistsHeadline: String!
 
-  songs: [Song] @belongsTo(name: "byAlbum", fields: ["id"])
+  songs: [Song] @hasOne(fields: ["id"])
 
   albumCategoryId: ID!
-    @index(name: "byAlbumCategory", sortKeyFields: ["albumCategoryId"])
 
   albumCategory: AlbumCategory @hasMany(fields: ["albumCategoryId"])
 }
@@ -27,6 +26,6 @@ type Song @model @auth(rules: [{ allow: public }]) {
   title: String!
   artist: String!
 
-  albumId: ID! @index(name: "byAlbum", sortKeyFields: ["albumId"])
+  albumId: ID!
   album: Album @hasMany(fields: ["albumId"])
 }
