@@ -1,10 +1,10 @@
-type AlbumCategory @model {
+type AlbumCategory @model @auth(rules: [{ allow: public }]) {
   id: ID!
   title: String!
-  albums: [Album] @hasMany(indexName: "byAlbumCategory", fields: ["id"])
+  albums: [Album] @belongsTo(indexName: "byAlbumCategory", fields: ["id"])
 }
 
-type Album @model {
+type Album @model @auth(rules: [{ allow: public }]) {
   id: ID! @primaryKey
   name: String!
   by: String!
@@ -12,14 +12,15 @@ type Album @model {
   imageUri: String!
   artistsHeadline: String!
 
-  songs: [Song] @hasMany(indexName: "byAlbum", fields: ["id"])
+  songs: [Song] @belongsTo(name: "byAlbum", fields: ["id"])
 
-  albumCategoryId: @index(name: "byAlbumCategory", sortKeyFields: ["albumCategoryId"])
+  albumCategoryId: ID!
+    @index(name: "byAlbumCategory", sortKeyFields: ["albumCategoryId"])
 
-  albumCategory: AlbumCategory @belongsTo(fields: ["albumCategoryId"])
+  albumCategory: AlbumCategory @hasMany(fields: ["albumCategoryId"])
 }
 
-type Song @model {
+type Song @model @auth(rules: [{ allow: public }]) {
   id: ID!
   imageUri: String!
   uri: String!
@@ -27,5 +28,5 @@ type Song @model {
   artist: String!
 
   albumId: ID! @index(name: "byAlbum", sortKeyFields: ["albumId"])
-  album: Album @belongsTo(fields: ["albumId"])
+  album: Album @hasMany(fields: ["albumId"])
 }
