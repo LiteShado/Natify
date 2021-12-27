@@ -1,4 +1,3 @@
-
 type AlbumCategory @model {
   id: ID!
   title: String!
@@ -6,7 +5,7 @@ type AlbumCategory @model {
 }
 
 type Album @model {
-  id: ID! @index(name: "byAlbumCategory", sortKeyFields: ["albumCategoryId"])
+  id: ID! @primaryKey
   name: String!
   by: String!
   numberOfLikes: Int!
@@ -15,17 +14,18 @@ type Album @model {
 
   songs: [Song] @hasMany(indexName: "byAlbum", fields: ["id"])
 
-  albumCategoryId: ID!
+  albumCategoryId: @index(name: "byAlbumCategory", sortKeyFields: ["albumCategoryId"])
+
   albumCategory: AlbumCategory @belongsTo(fields: ["albumCategoryId"])
 }
 
 type Song @model {
-  id: ID! @index(name: "byAlbum", sortKeyFields: ["albumId"])
+  id: ID!
   imageUri: String!
   uri: String!
   title: String!
   artist: String!
 
-  albumId: ID!
+  albumId: ID! @index(name: "byAlbum", sortKeyFields: ["albumId"])
   album: Album @belongsTo(fields: ["albumId"])
 }
