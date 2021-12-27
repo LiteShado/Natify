@@ -1,7 +1,7 @@
 type AlbumCategory @model @auth(rules: [{ allow: public }]) {
   id: ID!
   title: String!
-  albums: [Album] @hasOne(fields: ["id"])
+  albums: [Album] @hasMany(fields: ["id"])
 }
 
 type Album @model @auth(rules: [{ allow: public }]) {
@@ -12,11 +12,11 @@ type Album @model @auth(rules: [{ allow: public }]) {
   imageUri: String!
   artistsHeadline: String!
 
-  songs: [Song] @hasOne(fields: ["id"])
+  songs: [Song] @hasMany(fields: ["id"])
 
   albumCategoryId: ID!
 
-  albumCategory: AlbumCategory @hasMany(fields: ["albumCategoryId"])
+  albumCategory: AlbumCategory @hasOne(fields: ["albumCategoryId"])
 }
 
 type Song @model @auth(rules: [{ allow: public }]) {
@@ -27,5 +27,5 @@ type Song @model @auth(rules: [{ allow: public }]) {
   artist: String!
 
   albumId: ID!
-  album: Album @hasMany(fields: ["albumId"])
+  album: Album @hasOne(fields: ["albumId"])
 }
